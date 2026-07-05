@@ -300,6 +300,7 @@ class TermCodeApp(App):
         self.file_id_counter = 0
         self.workspace_root = "."
         self.search_results_data: List[Dict[str, str]] = []
+        self.search_timer = None
 
     def compose(self) -> ComposeResult:
         yield Header(show_clock=True)
@@ -467,14 +468,31 @@ class TermCodeApp(App):
     @on(Input.Changed, "#search_input")
     def on_search_input_changed(self, event: Input.Changed) -> None:
         query = event.value.strip()
+        
+        if self.search_timer is not None:
+            try:
+                self.search_timer.stop()
+            except Exception:
+                pass
+        
+        if len(query) < 2:
+            results_list = self.query_one("#search_results")
+            results_list.clear_options()
+            self.search_results_data = []
+            return
+
+        # Debounce execution of searching logic
+        self.search_timer = self.set_timer(0.25, lambda: self.async_search(query))
+
+    @work(thread=True)
+    def async_search(self, query: str) -> None:
+        results = EditorCore.search_in_workspace(self.workspace_root, query)
+        self.call_from_thread(self._display_search_results, results)
+
+    def _display_search_results(self, results: List[Dict[str, str]]) -> None:
         results_list = self.query_one("#search_results")
         results_list.clear_options()
         self.search_results_data = []
-        
-        if len(query) < 2:
-            return
-
-        results = EditorCore.search_in_workspace(self.workspace_root, query)
         for res in results:
             option_text = f"{res['file']}:{res['line_num']} - {res['content']}"
             results_list.add_option(Option(option_text))
