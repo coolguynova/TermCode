@@ -20,7 +20,252 @@ class InteractiveLabel(Label):
 class TermCodeApp(App):
     """A developer-focused, high-performance terminal layout mapping VS Code workflows."""
     
-    CSS_PATH = Path(__file__).parent / "styles.css"
+    DEFAULT_CSS = """
+    /* Main layout horizontal splitting */
+    #main_layout {
+        height: 1fr;
+        width: 100%;
+    }
+
+    /* VS Code Activity Bar (Far Left thin launcher) */
+    #activity_bar {
+        width: 7;
+        height: 100%;
+        background: #18181c;
+        color: #cccccc;
+        align: center top;
+        border-right: solid #252526;
+        padding: 0;
+    }
+
+    .activity_btn {
+        width: 100%;
+        height: 4;
+        background: #18181c;
+        color: #858585;
+        content-align: center middle;
+        text-align: center;
+        padding: 0;
+    }
+
+    .activity_btn:hover {
+        color: #ffffff;
+        background: #2a2d2e;
+    }
+
+    .activity_btn.active {
+        color: #ffffff;
+        background: #1e1e24;
+        border-left: solid #007acc;
+    }
+
+    /* Side Panel Container (Explorer/Search panel) */
+    #side_panel {
+        width: 30;
+        min-width: 25;
+        max-width: 40;
+        height: 100%;
+        background: #1e1e24;
+        border-right: solid #2d2d2d;
+    }
+
+    #explorer_panel, #search_panel {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+    }
+
+    /* Explorer header controls */
+    #explorer_actions {
+        height: 3;
+        width: 100%;
+        background: #252526;
+        align: center middle;
+        padding: 0 1;
+        border-bottom: solid #2d2d2d;
+    }
+
+    .action_btn {
+        height: 1;
+        min-width: 8;
+        background: #3c3c3c;
+        color: #cccccc;
+        border: none;
+        margin: 0 1;
+        padding: 0;
+    }
+
+    .action_btn:hover {
+        background: #007acc;
+        color: #ffffff;
+    }
+
+    .delete_btn:hover {
+        background: #a82020;
+        color: #ffffff;
+    }
+
+    /* Directory Tree block overrides */
+    DirectoryTree {
+        background: #1e1e24;
+        color: #cccccc;
+        border: none;
+        width: 100%;
+        height: 1fr;
+    }
+
+    DirectoryTree:focus {
+        color: #ffffff;
+    }
+
+    /* Search panel sub-elements */
+    #search_panel Label {
+        margin: 1 1 0 1;
+        text-style: bold;
+        color: #007acc;
+    }
+
+    #search_input {
+        background: #252526;
+        color: #e4e4e7;
+        border: solid #2d2d2d;
+        margin: 1;
+        height: 3;
+    }
+
+    #search_results {
+        background: #1e1e24;
+        color: #cccccc;
+        border: none;
+        height: 1fr;
+    }
+
+    /* Tab Bar styling */
+    #tab_bar {
+        height: 3;
+        width: 100%;
+        background: #252526;
+        border-bottom: solid #2d2d2d;
+        padding: 0;
+    }
+
+    .tab {
+        height: 3;
+        background: #2d2d2d;
+        color: #969696;
+        border-right: solid #252526;
+        width: auto;
+        padding: 0;
+        align: center middle;
+    }
+
+    .tab.active_tab {
+        background: #1e1e24;
+        color: #ffffff;
+        border-top: solid #007acc;
+    }
+
+    .tab_name_btn {
+        background: transparent;
+        color: #cccccc;
+        height: 1fr;
+        padding: 0 1;
+        content-align: center middle;
+    }
+
+    .tab_close_btn {
+        background: transparent;
+        color: #858585;
+        height: 1fr;
+        width: 3;
+        padding: 0;
+        content-align: center middle;
+        text-align: center;
+    }
+
+    .tab_close_btn:hover {
+        color: #f14c4c;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Find/Replace Panel */
+    #find_replace_panel {
+        height: 4;
+        width: 100%;
+        background: #252526;
+        border-bottom: solid #007acc;
+        align: center middle;
+        padding: 0 1;
+    }
+
+    #find_replace_panel Input {
+        width: 25;
+        height: 3;
+        background: #1e1e24;
+        color: #cccccc;
+        border: solid #3c3c3c;
+        margin-right: 1;
+    }
+
+    #find_replace_panel Button {
+        height: 3;
+        background: #3c3c3c;
+        color: #cccccc;
+        border: none;
+        margin-right: 1;
+    }
+
+    #find_replace_panel Button:hover {
+        background: #007acc;
+        color: #ffffff;
+    }
+
+    /* Editor pane workspace styling */
+    #editor_pane {
+        width: 100%;
+        height: 1fr;
+        background: #1e1e24;
+        padding: 0;
+    }
+
+    #placeholder_label {
+        width: 100%;
+        height: 100%;
+        content-align: center middle;
+        color: #626262;
+        text-style: italic;
+        background: #1e1e24;
+    }
+
+    TextArea {
+        width: 100%;
+        height: 100%;
+        background: #1e1e24;
+        color: #e4e4e7;
+        border: none;
+    }
+
+    TextArea:focus {
+        border: none;
+    }
+
+    /* Helper utility to hide components */
+    .hidden {
+        display: none;
+    }
+
+    /* Status Bar */
+    #custom_status_bar {
+        dock: bottom;
+        background: #007acc;
+        color: #ffffff;
+        padding-left: 2;
+        padding-right: 2;
+        height: 1;
+        width: 100%;
+        text-style: bold;
+    }
+    """
 
     BINDINGS = [
         ("ctrl+b", "toggle_sidebar", "Toggle Sidebar"),
