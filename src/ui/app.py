@@ -360,7 +360,6 @@ class TermCodeApp(App):
 
     # --- Sidebar and Activity Bar Operations ---
 
-    @on(events.Click, "#btn_explorer")
     def show_explorer(self) -> None:
         self.query_one("#explorer_panel").remove_class("hidden")
         self.query_one("#search_panel").add_class("hidden")
@@ -368,7 +367,6 @@ class TermCodeApp(App):
         self.query_one("#btn_search").remove_class("active")
         self.query_one("#dir_tree").focus()
 
-    @on(events.Click, "#btn_search")
     def show_search(self) -> None:
         self.query_one("#explorer_panel").add_class("hidden")
         self.query_one("#search_panel").remove_class("hidden")
@@ -621,12 +619,17 @@ class TermCodeApp(App):
         # Standard buttons (explorer actions, find & replace) are handled here
         pass
 
-    @on(events.Click)
     def on_click(self, event: events.Click) -> None:
         target = event.widget
         # Check if the clicked target (or one of its ancestors) is a tab label or explorer button
         while target is not None and target != self:
-            if target.id == "btn_new_file":
+            if target.id == "btn_explorer":
+                self.show_explorer()
+                break
+            elif target.id == "btn_search":
+                self.show_search()
+                break
+            elif target.id == "btn_new_file":
                 self.create_new_file_prompt()
                 break
             elif target.id == "btn_new_folder":
@@ -643,6 +646,13 @@ class TermCodeApp(App):
                     path = self.id_to_path.get(file_id)
                     if path:
                         self._close_tab_by_path(path)
+                break
+            elif "tab" in target.classes:
+                # Find the child tab_name_btn to get file_id
+                for child in target.walk_children():
+                    if "tab_name_btn" in child.classes and hasattr(child, "file_id"):
+                        self._switch_to_tab(child.file_id)
+                        break
                 break
             target = target.parent
 
