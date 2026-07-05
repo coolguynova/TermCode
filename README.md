@@ -30,11 +30,20 @@ termcode.cmd
 ```
 
 ### Method 2: Global CLI Command (Recommended)
+
+#### Option A: Symlink (Linux/macOS)
+You can link the runner script directly to your user bin path (already done for you!):
+```bash
+ln -sf /home/nova/Projects/termcode/termcode ~/.local/bin/termcode
+```
+
+#### Option B: Editable Pip Installation
 Install the application globally in editable mode:
 ```bash
 pip install -e .
 ```
-Once installed, you can launch it from any directory using:
+
+Once linked/installed, you can launch TermCode from any directory using:
 ```bash
 termcode
 ```
