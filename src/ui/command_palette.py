@@ -8,7 +8,7 @@ from textual import on, events
 import os
 
 class CommandPaletteModal(ModalScreen[Optional[Tuple[str, str]]]):
-    """A VS Code-like command palette and file search modal screen."""
+    """Modal dialog displaying commands or fuzzy-searched project files."""
 
     DEFAULT_CSS = """
     CommandPaletteModal {
@@ -47,9 +47,7 @@ class CommandPaletteModal(ModalScreen[Optional[Tuple[str, str]]]):
     def __init__(self, files: List[str], commands: List[Tuple[str, str]]) -> None:
         super().__init__()
         self.files = files
-        # List of (display_name, action_name)
         self.commands = commands
-        # Track selected values by list index
         self.option_values: List[Tuple[str, str]] = []
 
     def compose(self) -> ComposeResult:
@@ -67,14 +65,14 @@ class CommandPaletteModal(ModalScreen[Optional[Tuple[str, str]]]):
         self.option_values = []
 
         if search_text.startswith(">"):
-            # Show filtered commands
+            # Filter editor commands
             query = search_text[1:].strip().lower()
             for cmd_name, action in self.commands:
                 if not query or query in cmd_name.lower():
                     option_list.add_option(Option(f"⚙️  {cmd_name}"))
                     self.option_values.append(("command", action))
         else:
-            # Show filtered files
+            # Filter files list
             query = search_text.strip().lower()
             for file_path in self.files:
                 if not query or query in file_path.lower():
@@ -90,7 +88,6 @@ class CommandPaletteModal(ModalScreen[Optional[Tuple[str, str]]]):
     def on_input_submitted(self, event: Input.Submitted) -> None:
         option_list = self.query_one(OptionList)
         if option_list.option_count > 0:
-            # If there's a highlighted option, select it
             index = option_list.highlighted
             if index is not None and index < len(self.option_values):
                 self.dismiss(self.option_values[index])

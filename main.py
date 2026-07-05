@@ -2,7 +2,7 @@
 from src.ui.app import TermCodeApp
 
 def main() -> None:
-    """System container initialization target routing execution vectors safely."""
+    """Launch the TermCode application."""
     app = TermCodeApp()
     app.run()
 
