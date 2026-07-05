@@ -4,6 +4,10 @@ A developer-focused terminal text editor mapping classic VS Code workflows. Buil
 
 TermCode brings a full-featured side panel (with a directory explorer, file creator, and recursive workspace search), a mouse-interactive multi-tab layout, and a command palette straight to your terminal emulator.
 
+<p align="center">
+  <img src="assets/termcode_mockup.png" alt="TermCode Editor Interface Showcase" width="600" />
+</p>
+
 ---
 
 ## Key Features
