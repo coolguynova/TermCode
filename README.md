@@ -34,7 +34,7 @@ termcode.cmd
 #### Option A: Symlink (Linux/macOS)
 You can link the runner script directly to your user bin path (already done for you!):
 ```bash
-ln -sf /home/nova/Projects/termcode/termcode ~/.local/bin/termcode
+ln -sf "$(pwd)/termcode" ~/.local/bin/termcode
 ```
 
 #### Option B: Editable Pip Installation
