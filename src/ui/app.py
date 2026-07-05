@@ -90,9 +90,10 @@ class TermCodeApp(App):
         min-width: 8;
         background: #3c3c3c;
         color: #cccccc;
-        border: none;
         margin: 0 1;
         padding: 0;
+        content-align: center middle;
+        text-align: center;
     }
 
     .action_btn:hover {
@@ -133,6 +134,10 @@ class TermCodeApp(App):
         height: 3;
     }
 
+    #search_input:focus {
+        border: solid #007acc;
+    }
+
     #search_results {
         background: #1e1e24;
         color: #cccccc;
@@ -163,6 +168,11 @@ class TermCodeApp(App):
         background: #1e1e24;
         color: #ffffff;
         border-top: solid #007acc;
+    }
+
+    .tab.active_tab .tab_name_btn {
+        color: #ffffff;
+        text-style: bold;
     }
 
     .tab_name_btn {
@@ -207,6 +217,10 @@ class TermCodeApp(App):
         margin-right: 1;
     }
 
+    #find_replace_panel Input:focus {
+        border: solid #007acc;
+    }
+
     #find_replace_panel Button {
         height: 3;
         background: #3c3c3c;
@@ -233,8 +247,8 @@ class TermCodeApp(App):
         height: 100%;
         content-align: center middle;
         color: #626262;
-        text-style: italic;
         background: #1e1e24;
+        line-spacing: 1;
     }
 
     TextArea {
@@ -300,9 +314,9 @@ class TermCodeApp(App):
                 # Explorer Panel (default view)
                 with Vertical(id="explorer_panel"):
                     with Horizontal(id="explorer_actions"):
-                        yield Button("📄+ File", id="btn_new_file", classes="action_btn")
-                        yield Button("📁+ Folder", id="btn_new_folder", classes="action_btn")
-                        yield Button("🗑️ Delete", id="btn_delete_path", classes="action_btn delete_btn")
+                        yield InteractiveLabel("📄+ File", id="btn_new_file", classes="action_btn")
+                        yield InteractiveLabel("📁+ Folder", id="btn_new_folder", classes="action_btn")
+                        yield InteractiveLabel("🗑️ Delete", id="btn_delete_path", classes="action_btn delete_btn")
                     yield DirectoryTree(self.workspace_root, id="dir_tree")
                 
                 # Search Panel (hidden initially)
@@ -327,7 +341,16 @@ class TermCodeApp(App):
                 # Editor Panel Container
                 with Container(id="editor_pane"):
                     # We will dynamically spawn/remove text areas here and toggle display
-                    yield Label("TermCode Editor | Open or create a file to start coding", id="placeholder_label")
+                    yield Label(
+                        "  TermCode\n\n"
+                        "  Go to File        Ctrl+P\n"
+                        "  Toggle Sidebar    Ctrl+B\n"
+                        "  Find in File      Ctrl+F\n"
+                        "  Close Tab         Ctrl+W\n"
+                        "  Save File         Ctrl+S\n"
+                        "  Exit              Ctrl+Q",
+                        id="placeholder_label"
+                    )
 
         # 4. Custom status bar (replaces default status bar for more detail)
         yield Label("TermCode Standby | Ctrl+P for Command Palette", id="custom_status_bar")
@@ -601,9 +624,18 @@ class TermCodeApp(App):
     @on(events.Click)
     def on_click(self, event: events.Click) -> None:
         target = event.widget
-        # Check if the clicked target (or one of its ancestors) is a tab label
+        # Check if the clicked target (or one of its ancestors) is a tab label or explorer button
         while target is not None and target != self:
-            if hasattr(target, "file_id"):
+            if target.id == "btn_new_file":
+                self.create_new_file_prompt()
+                break
+            elif target.id == "btn_new_folder":
+                self.create_new_folder_prompt()
+                break
+            elif target.id == "btn_delete_path":
+                self.delete_selected_path()
+                break
+            elif hasattr(target, "file_id"):
                 file_id = target.file_id
                 if "tab_name_btn" in target.classes:
                     self._switch_to_tab(file_id)
