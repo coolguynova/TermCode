@@ -248,7 +248,7 @@ class TermCodeApp(App):
         content-align: center middle;
         color: #626262;
         background: #1e1e24;
-        line-spacing: 1;
+        line-pad: 1;
     }
 
     TextArea {
