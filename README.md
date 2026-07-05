@@ -13,12 +13,24 @@ A developer-focused terminal editor layout mapping VS Code workflows, built with
 
 ### Method 1: Local Runner Script
 Run the wrapper script from the project directory:
+
+**On Linux/macOS:**
 ```bash
 ./termcode
 ```
 
+**On Windows (Command Prompt):**
+```cmd
+termcode.cmd
+```
+
+**On Windows (PowerShell):**
+```powershell
+.\termcode.ps1
+```
+
 ### Method 2: Global CLI Command (Recommended)
-Install the application globally in editable mode or using `pip`/`pipx`:
+Install the application globally in editable mode:
 ```bash
 pip install -e .
 ```
@@ -26,3 +38,4 @@ Once installed, you can launch it from any directory using:
 ```bash
 termcode
 ```
+*(On Windows, pip automatically generates a native `termcode.exe` wrapper inside your Python Scripts folder so this works exactly the same!)*
