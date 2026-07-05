@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "termcode"
+version = "1.0.0"
+description = "A developer-focused terminal editor layout mapping VS Code workflows."
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "textual>=0.74.0",
+]
+
+[project.scripts]
+termcode = "main:main"
+
+[tool.setuptools]
+py-modules = ["main"]
+packages = ["src", "src.core", "src.ui"]
